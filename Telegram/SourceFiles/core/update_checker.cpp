@@ -34,6 +34,39 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 #include <ksandbox.h>
 
+// Ensure macro is defined consistently
+#ifndef TDESKTOP_DISABLE_AUTOUPDATE
+#ifdef DESKTOP_APP_DISABLE_AUTOUPDATE
+#define TDESKTOP_DISABLE_AUTOUPDATE
+#endif // DESKTOP_APP_DISABLE_AUTOUPDATE
+#endif // !TDESKTOP_DISABLE_AUTOUPDATE
+
+#ifndef TDESKTOP_DISABLE_AUTOUPDATE
+#if defined Q_OS_WIN && !defined TDESKTOP_USE_PACKAGED // use Lzma SDK for win
+#include <LzmaLib.h>
+#else // Q_OS_WIN && !TDESKTOP_USE_PACKAGED
+#include <lzma.h>
+#endif // else of Q_OS_WIN && !TDESKTOP_USE_PACKAGED
+#endif // !TDESKTOP_DISABLE_AUTOUPDATE
+
+#ifndef Q_OS_WIN
+#include <unistd.h>
+#endif // !Q_OS_WIN
+
+namespace Core {
+namespace {
+
+constexpr auto kUpdaterTimeout = 10 * crl::time(1000);
+constexpr auto kMaxResponseSize = 1024 * 1024;
+
+// Use the macro to set UpdaterIsDisabled
+#ifdef TDESKTOP_DISABLE_AUTOUPDATE
+bool UpdaterIsDisabled = true;
+#else // TDESKTOP_DISABLE_AUTOUPDATE
+bool UpdaterIsDisabled = false;
+#endif // TDESKTOP_DISABLE_AUTOUPDATE
+
+
 extern "C" {
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
