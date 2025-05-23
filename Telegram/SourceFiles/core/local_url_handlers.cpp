@@ -653,6 +653,8 @@ bool ResolveUsernameOrPhone(
 		}
 	}
 	controller->window().activate();
+	QString text = params.value(u"text"_q); // Store in a local variable
+	text.replace(u"@"_q, u"@\\"_q);       // Modify the non-const QString
 	controller->showPeerByLink(Window::PeerByLinkInfo{
 		.usernameOrId = domain,
 		.phone = phone,
@@ -661,7 +663,7 @@ bool ResolveUsernameOrPhone(
 		.videoTimestamp = (!videot.isEmpty()
 			? ParseVideoTimestamp(videot)
 			: std::optional<TimeId>()),
-		.text = params.value(u"text"_q).replace(u"@"_q, u"@\\"_q),
+		.text = text,                     // Use the modified string
 		.repliesInfo = commentId
 			? Window::RepliesByLinkInfo{
 				Window::CommentId{ commentId }
