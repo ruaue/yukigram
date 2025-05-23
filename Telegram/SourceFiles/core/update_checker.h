@@ -8,7 +8,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #pragma once
 
 #include "base/weak_ptr.h"
-#include "mtproto/dedicated_loader.h"
+#include "mtproto/dedicated_file_loader.h"
 
 #include <rpl/producer.h>
 
